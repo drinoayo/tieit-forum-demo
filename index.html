@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T.I.E.I.T Student Forum — Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#002255;--navy-mid:#003080;--navy-light:#E8EEF8;--navy-faint:#F2F5FB;
+  --gold:#B8881A;--gold-b:#C8981E;--gold-l:#FBF3DC;
+  --text:#111827;--text-mid:#374151;--text-muted:#6B7280;--text-faint:#9CA3AF;
+  --border:#E5E7EB;--border-mid:#D1D5DB;--surface:#F9FAFB;--white:#FFFFFF;
+  --green:#166534;--green-bg:#DCFCE7;--amber:#92400E;--amber-bg:#FEF3C7;
+  --r:8px;--rl:12px;--rxl:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--surface);color:var(--text);font-size:15px;line-height:1.65;}
+img{display:block;}
+button{font-family:'DM Sans',sans-serif;cursor:pointer;}
+.ribbon{background:var(--navy);color:rgba(255,255,255,0.7);font-size:12px;text-align:center;padding:8px 16px;letter-spacing:0.02em;display:flex;align-items:center;justify-content:center;gap:14px;}
+.ribbon strong{color:var(--gold-b);font-weight:500;}
+.ribbon-dot{width:5px;height:5px;border-radius:50%;background:var(--gold-b);flex-shrink:0;}
+.topbar{background:var(--navy);height:62px;display:flex;align-items:center;padding:0 32px;justify-content:space-between;position:sticky;top:0;z-index:80;border-bottom:1px solid rgba(255,255,255,0.07);}
+.topbar-left{display:flex;align-items:center;gap:14px;}
+.site-logo{width:40px;height:40px;border-radius:50%;overflow:hidden;flex-shrink:0;}
+.site-logo img{width:100%;height:100%;object-fit:cover;}
+.logo-text{display:flex;flex-direction:column;line-height:1.2;}
+.logo-text-main{color:#fff;font-size:13px;font-weight:500;}
+.logo-text-sub{color:rgba(255,255,255,0.4);font-size:11px;font-weight:300;}
+.dvdr{width:1px;height:26px;background:rgba(255,255,255,0.12);margin:0 4px;}
+.topbar-nav{display:flex;gap:2px;}
+.tnav{background:transparent;border:none;color:rgba(255,255,255,0.6);padding:8px 15px;border-radius:var(--r);font-size:13.5px;font-weight:400;transition:all .15s;}
+.tnav:hover{background:rgba(255,255,255,0.07);color:#fff;}
+.tnav.on{background:rgba(255,255,255,0.12);color:#fff;font-weight:500;}
+.topbar-right{display:flex;align-items:center;gap:10px;}
+.icon-btn{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.1);border:none;display:flex;align-items:center;justify-content:center;position:relative;transition:background .15s;}
+.icon-btn:hover{background:rgba(255,255,255,0.18);}
+.npip{width:8px;height:8px;border-radius:50%;background:var(--gold-b);position:absolute;top:4px;right:4px;border:1.5px solid var(--navy);}
+.page{display:none;}
+.page.on{display:block;}
+/* HERO */
+.hero{background:var(--navy);padding:58px 40px 52px;position:relative;overflow:hidden;}
+.hero-lines{position:absolute;inset:0;opacity:0.035;}
+.hero-lines svg{width:100%;height:100%;}
+.hero-inner{position:relative;max-width:640px;}
+.hero-kicker{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.hk-line{width:28px;height:2px;background:var(--gold-b);}
+.hk-text{font-size:11px;font-weight:500;letter-spacing:0.12em;color:var(--gold-b);text-transform:uppercase;}
+.hero h1{font-family:'DM Serif Display',serif;font-size:38px;font-weight:400;color:#fff;line-height:1.18;margin-bottom:16px;}
+.hero h1 em{font-style:italic;color:rgba(255,255,255,0.55);}
+.hero-body{color:rgba(255,255,255,0.56);font-size:14.5px;max-width:500px;line-height:1.8;margin-bottom:30px;}
+.hero-cta{display:flex;align-items:center;gap:12px;}
+.hero-stats{margin-top:46px;display:flex;border-top:1px solid rgba(255,255,255,0.1);padding-top:28px;}
+.hstat{padding-right:36px;margin-right:36px;border-right:1px solid rgba(255,255,255,0.08);}
+.hstat:last-child{border-right:none;}
+.hstat-n{font-family:'DM Serif Display',serif;font-size:26px;color:var(--gold-b);}
+.hstat-l{font-size:12px;color:rgba(255,255,255,0.38);margin-top:2px;}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:8px;border:none;border-radius:var(--r);font-size:13.5px;font-weight:500;padding:10px 20px;transition:all .15s;cursor:pointer;}
+.btn-primary{background:var(--gold-b);color:var(--navy);}
+.btn-primary:hover{background:#D4A020;}
+.btn-white{background:#fff;color:var(--navy);}
+.btn-white:hover{background:#F0F4FF;}
+.btn-navy{background:var(--navy);color:#fff;}
+.btn-navy:hover{background:var(--navy-mid);}
+.btn-outline{background:transparent;color:var(--navy);border:1.5px solid var(--navy);}
+.btn-outline:hover{background:var(--navy-faint);}
+.btn-ghost{background:transparent;color:var(--text-muted);border:1px solid var(--border);}
+.btn-ghost:hover{background:var(--surface);color:var(--text-mid);}
+.btn-sm{padding:7px 14px;font-size:13px;}
+.btn-full{width:100%;justify-content:center;}
+/* LAYOUT */
+.wrap{max-width:1160px;margin:0 auto;padding:28px 32px;}
+.two-col{display:grid;grid-template-columns:minmax(0,1fr) 276px;gap:28px;align-items:start;}
+.side-col{position:sticky;top:90px;}
+/* TAB BAR */
+.tabbar{display:flex;gap:2px;background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:4px;margin-bottom:22px;}
+.tbtn{flex:1;background:transparent;border:none;padding:9px 10px;border-radius:var(--r);font-size:13px;color:var(--text-muted);font-weight:400;transition:all .15s;}
+.tbtn:hover{color:var(--text-mid);background:var(--surface);}
+.tbtn.on{background:var(--navy);color:#fff;font-weight:500;}
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.sec-head h2{font-size:15px;font-weight:500;color:var(--text);}
+.sec{display:none;}
+.sec.on{display:block;}
+/* CARDS */
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--rl);transition:border-color .15s,box-shadow .15s;}
+.card:hover{border-color:#B0BCD4;box-shadow:0 2px 14px rgba(0,34,85,0.07);}
+/* CAT GRID */
+.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:4px;}
+.cat-card{padding:18px;cursor:pointer;}
+.cat-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;}
+.cat-card h3{font-size:14px;font-weight:500;color:var(--text);margin-bottom:3px;}
+.cat-card p{font-size:12.5px;color:var(--text-faint);}
+/* TOPIC */
+.topic-list{display:flex;flex-direction:column;gap:10px;}
+.topic-card{padding:16px;cursor:pointer;}
+.tc-top{display:flex;gap:12px;align-items:flex-start;}
+.av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;flex-shrink:0;}
+.tc-body{flex:1;min-width:0;}
+.tc-title{font-size:14px;font-weight:500;color:var(--text);margin-bottom:4px;line-height:1.45;}
+.tc-meta{font-size:12px;color:var(--text-faint);}
+.tc-foot{display:flex;align-items:center;gap:8px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);flex-wrap:wrap;}
+.reply-ct{font-size:12px;color:var(--text-faint);margin-left:auto;display:flex;align-items:center;gap:5px;}
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:500;padding:3px 10px;border-radius:20px;}
+.b-navy{background:var(--navy-light);color:var(--navy-mid);}
+.b-green{background:var(--green-bg);color:var(--green);}
+.b-amber{background:var(--amber-bg);color:var(--amber);}
+.b-red{background:#FEE2E2;color:#991B1B;}
+.b-gold{background:var(--gold-l);color:var(--gold);}
+/* SIDEBAR */
+.side-card{background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:18px;margin-bottom:16px;}
+.side-card h3{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-faint);margin-bottom:14px;}
+.srow{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--text-muted);}
+.srow:last-child{border-bottom:none;}
+.dot-on{width:7px;height:7px;border-radius:50%;background:#16A34A;flex-shrink:0;}
+.dot-busy{width:7px;height:7px;border-radius:50%;background:var(--gold-b);flex-shrink:0;}
+/* THREAD */
+.thread-hd{background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:24px;margin-bottom:16px;}
+.thread-hd h1{font-family:'DM Serif Display',serif;font-size:22px;font-weight:400;color:var(--navy);margin-bottom:10px;line-height:1.35;}
+.thread-meta{display:flex;align-items:center;gap:12px;font-size:13px;color:var(--text-muted);flex-wrap:wrap;}
+.reply-card{background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:20px;margin-bottom:10px;}
+.reply-top{display:flex;align-items:flex-start;gap:14px;margin-bottom:12px;}
+.reply-auth h4{font-size:14px;font-weight:500;color:var(--text);}
+.reply-auth p{font-size:12px;color:var(--text-faint);}
+.reply-body{font-size:14px;color:var(--text-mid);line-height:1.8;}
+.reply-actions{display:flex;gap:10px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);}
+.act-btn{background:transparent;border:none;color:var(--text-faint);font-size:12.5px;display:flex;align-items:center;gap:5px;padding:4px 8px;border-radius:6px;transition:all .15s;}
+.act-btn:hover{background:var(--surface);color:var(--text-muted);}
+.reply-form{background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:20px;}
+.reply-form h3{font-size:14px;font-weight:500;margin-bottom:14px;color:var(--text);}
+.reply-form textarea{width:100%;border:1px solid var(--border);border-radius:var(--r);padding:12px;font-size:14px;font-family:'DM Sans',sans-serif;resize:none;height:100px;color:var(--text);outline:none;}
+.reply-form textarea:focus{border-color:var(--navy-mid);}
+/* MENTOR */
+.mentor-banner{background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:28px;margin-bottom:22px;display:flex;align-items:flex-start;gap:22px;}
+.mb-icon{width:56px;height:56px;background:var(--navy-light);border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.mb-text h2{font-family:'DM Serif Display',serif;font-size:21px;font-weight:400;color:var(--navy);margin-bottom:7px;}
+.mb-text p{font-size:13.5px;color:var(--text-muted);line-height:1.7;margin-bottom:16px;}
+.filter-bar{display:flex;gap:10px;margin-bottom:18px;}
+.f-input{flex:1;border:1px solid var(--border);border-radius:var(--r);padding:10px 14px;font-size:13.5px;font-family:'DM Sans',sans-serif;background:var(--white);color:var(--text);outline:none;}
+.f-input:focus{border-color:var(--navy-mid);}
+.f-select{border:1px solid var(--border);border-radius:var(--r);padding:10px 14px;font-size:13.5px;font-family:'DM Sans',sans-serif;background:var(--white);color:var(--text);outline:none;}
+.mcard{background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:20px;margin-bottom:12px;transition:border-color .15s,box-shadow .15s;}
+.mcard:hover{border-color:#B0BCD4;box-shadow:0 2px 14px rgba(0,34,85,0.07);}
+.mcard-top{display:flex;gap:14px;align-items:flex-start;margin-bottom:14px;}
+.mav{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:500;flex-shrink:0;}
+.mcard-info h3{font-size:15px;font-weight:500;color:var(--text);margin-bottom:3px;}
+.mcard-info p{font-size:12.5px;color:var(--text-muted);}
+.mcard-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;}
+.mtag{font-size:12px;color:var(--text-muted);border:1px solid var(--border-mid);border-radius:20px;padding:3px 11px;background:var(--surface);}
+.mcard-footer{display:flex;gap:10px;align-items:center;padding-top:14px;border-top:1px solid var(--border);}
+.mcard-stat{font-size:12.5px;color:var(--text-faint);display:flex;align-items:center;gap:5px;}
+/* PROGRAMMES */
+.prog-card{background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:22px;display:flex;gap:18px;margin-bottom:12px;transition:border-color .15s;}
+.prog-card:hover{border-color:#B0BCD4;}
+.prog-icon{width:48px;height:48px;background:var(--navy-light);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.prog-body h3{font-size:15px;font-weight:500;color:var(--text);margin-bottom:6px;}
+.prog-body p{font-size:13.5px;color:var(--text-muted);line-height:1.7;margin-bottom:12px;}
+.prog-meta{display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--text-faint);}
+/* RESOURCES */
+.res-card{background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:16px 20px;display:flex;align-items:center;gap:16px;margin-bottom:10px;cursor:pointer;transition:border-color .15s;}
+.res-card:hover{border-color:#B0BCD4;}
+.res-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.res-title{font-size:14px;font-weight:500;color:var(--text);margin-bottom:3px;}
+.res-meta{font-size:12px;color:var(--text-faint);}
+.res-arrow{margin-left:auto;flex-shrink:0;color:var(--text-faint);}
+/* PROFILE */
+.profile-hero{background:var(--navy);padding:36px 32px;position:relative;overflow:hidden;}
+.prof-hero-inner{display:flex;align-items:flex-end;gap:24px;position:relative;}
+.prof-av-lg{width:80px;height:80px;border-radius:50%;border:3px solid rgba(255,255,255,0.3);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:500;flex-shrink:0;}
+.prof-name{color:#fff;font-family:'DM Serif Display',serif;font-size:24px;font-weight:400;margin-bottom:4px;}
+.prof-role{color:rgba(255,255,255,0.45);font-size:13px;}
+.prof-body{padding:28px 32px;}
+.prof-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+.prof-section{background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:20px;}
+.prof-section h3{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-faint);margin-bottom:14px;}
+.prof-stat{display:flex;align-items:baseline;gap:8px;margin-bottom:10px;}
+.prof-stat-n{font-family:'DM Serif Display',serif;font-size:28px;color:var(--navy);}
+.prof-stat-l{font-size:13px;color:var(--text-muted);}
+.act-row{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--text-muted);}
+.act-row:last-child{border-bottom:none;}
+.act-dot{width:8px;height:8px;border-radius:50%;background:var(--navy-light);border:2px solid var(--navy-mid);flex-shrink:0;margin-top:5px;}
+/* ABOUT */
+.about-banner{background:var(--navy);padding:56px 40px;position:relative;overflow:hidden;}
+.about-lines{position:absolute;inset:0;opacity:0.03;}
+.about-inner{position:relative;max-width:660px;}
+.about-inner h1{font-family:'DM Serif Display',serif;font-size:32px;font-weight:400;color:#fff;line-height:1.25;margin-bottom:16px;}
+.about-inner h1 em{font-style:italic;color:rgba(255,255,255,0.5);}
+.about-inner p{color:rgba(255,255,255,0.58);font-size:14.5px;line-height:1.8;margin-bottom:10px;}
+.about-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;padding:28px 32px;}
+.about-card{background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:22px;}
+.about-card-icon{width:40px;height:40px;background:var(--navy-light);border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;}
+.about-card h3{font-size:14.5px;font-weight:500;color:var(--text);margin-bottom:7px;}
+.about-card p{font-size:13px;color:var(--text-muted);line-height:1.7;}
+.about-contact{background:var(--white);border:1px solid var(--border);border-radius:var(--rl);padding:24px 32px;margin:0 32px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px;}
+.about-contact-text h3{font-size:16px;font-weight:500;color:var(--text);margin-bottom:5px;}
+.about-contact-text p{font-size:13.5px;color:var(--text-muted);}
+/* MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,16,48,0.52);z-index:200;align-items:center;justify-content:center;padding:20px;}
+.overlay.on{display:flex;}
+.modal{background:var(--white);border-radius:var(--rxl);padding:30px;width:100%;max-width:500px;border:1px solid var(--border);}
+.modal-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;}
+.modal-hd h2{font-size:17px;font-weight:500;color:var(--text);}
+.close-x{background:none;border:none;color:var(--text-faint);border-radius:6px;padding:4px;transition:background .15s;}
+.close-x:hover{background:var(--surface);}
+.field{margin-bottom:16px;}
+.field label{display:block;font-size:13px;font-weight:500;color:var(--text-muted);margin-bottom:6px;}
+.field input,.field select,.field textarea{width:100%;border:1px solid var(--border);border-radius:var(--r);padding:10px 13px;font-size:14px;font-family:'DM Sans',sans-serif;background:var(--white);color:var(--text);outline:none;transition:border-color .15s;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--navy-mid);}
+.field textarea{height:92px;resize:none;}
+.modal-ft{display:flex;gap:10px;justify-content:flex-end;margin-top:22px;}
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--navy);color:#fff;padding:13px 22px;border-radius:var(--r);font-size:13.5px;z-index:300;opacity:0;transform:translateY(10px);transition:all .25s;pointer-events:none;display:flex;align-items:center;gap:10px;box-shadow:0 6px 24px rgba(0,34,85,0.22);}
+.toast.on{opacity:1;transform:translateY(0);}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--text-faint);margin-bottom:18px;}
+.breadcrumb a{color:var(--navy-mid);cursor:pointer;}
+.breadcrumb a:hover{text-decoration:underline;}
+/* RESPONSIVE */
+@media(max-width:820px){
+  .two-col{grid-template-columns:1fr;}
+  .side-col{position:static;}
+  .cat-grid{grid-template-columns:1fr;}
+  .hero{padding:36px 20px;}
+  .hero h1{font-size:26px;}
+  .hero-stats{flex-wrap:wrap;gap:20px;}
+  .hstat{padding-right:20px;margin-right:20px;}
+  .wrap{padding:20px 16px;}
+  .topbar{padding:0 16px;}
+  .topbar-nav .tnav:not(.on){display:none;}
+  .mentor-banner{flex-direction:column;gap:16px;}
+  .prof-grid{grid-template-columns:1fr;}
+  .about-grid{grid-template-columns:1fr;padding:20px 16px;}
+  .about-contact{flex-direction:column;gap:14px;margin:0 16px 24px;}
+  .profile-hero{padding:28px 20px;}
+  .prof-body{padding:20px 16px;}
+  .about-banner{padding:36px 20px;}
+}
+</style>
+</head>
+<body>
+<!-- DEMO RIBBON -->
+<div class="ribbon"><span class="ribbon-dot"></span><span>This is a <strong>design prototype</strong> built specifically for T.I.E.I.T — preview the Student Forum before development begins &middot; built by <strong>drino</strong></span><span class="ribbon-dot"></span></div>
+
+<!-- TOPBAR -->
+<nav class="topbar">
+  <div class="topbar-left">
+    <div class="site-logo"><img src="data:image/png;base64,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" alt="T.I.E.I.T Logo"></div>
+    <div class="logo-text"><span class="logo-text-main">T.I.E.I.T</span><span class="logo-text-sub">Student Forum</span></div>
+    <div class="dvdr"></div>
+  </div>
+  <div class="topbar-nav">
+    <button class="tnav on" onclick="gp('forum',this)">Forum</button>
+    <button class="tnav" onclick="gp('mentorship',this)">Mentorship</button>
+    <button class="tnav" onclick="gp('programs',this)">Programmes</button>
+    <button class="tnav" onclick="gp('resources',this)">Resources</button>
+    <button class="tnav" onclick="gp('about',this)">About this build</button>
+  </div>
+  <div class="topbar-right">
+    <button class="icon-btn" onclick="showToast('You have 3 unread notifications')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.75)" stroke-width="2" stroke-linecap="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <span class="npip"></span>
+    </button>
+    <button class="icon-btn" onclick="gp('profile',null)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.75)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+    </button>
+  </div>
+</nav>
+<!-- FORUM PAGE -->
+<div id="page-forum" class="page on">
+  <div class="hero">
+    <div class="hero-lines">
+      <svg viewBox="0 0 1200 400" preserveAspectRatio="xMidYMid slice">
+        <defs><pattern id="g1" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse"><path d="M60 0L0 0 0 60" fill="none" stroke="#fff" stroke-width="0.5"/></pattern></defs>
+        <rect width="1200" height="400" fill="url(#g1)"/>
+        <circle cx="950" cy="200" r="340" fill="none" stroke="#fff" stroke-width="0.5"/>
+        <circle cx="950" cy="200" r="220" fill="none" stroke="#fff" stroke-width="0.5"/>
+        <circle cx="950" cy="200" r="100" fill="none" stroke="#fff" stroke-width="0.5"/>
+      </svg>
+    </div>
+    <div class="hero-inner">
+      <div class="hero-kicker"><div class="hk-line"></div><span class="hk-text">The Institute of Export &amp; International Trade</span></div>
+      <h1>Where trade knowledge<br><em>finds its community</em></h1>
+      <p class="hero-body">A dedicated space for T.I.E.I.T students, alumni, and trade professionals to ask questions, share expertise, and build meaningful connections across the global trade industry.</p>
+      <div class="hero-cta">
+        <button class="btn btn-primary" onclick="openModal()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Start a discussion
+        </button>
+        <button class="btn btn-white" onclick="gp('mentorship',document.querySelectorAll('.tnav')[1])">Find a mentor</button>
+      </div>
+      <div class="hero-stats">
+        <div class="hstat"><div class="hstat-n">1,240</div><div class="hstat-l">Registered members</div></div>
+        <div class="hstat"><div class="hstat-n">386</div><div class="hstat-l">Active discussions</div></div>
+        <div class="hstat"><div class="hstat-n">42</div><div class="hstat-l">Verified mentors</div></div>
+        <div class="hstat"><div class="hstat-n">94%</div><div class="hstat-l">Questions answered</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="tabbar">
+      <button class="tbtn on" onclick="tab('categories',this)">Categories</button>
+      <button class="tbtn" onclick="tab('recent',this)">Recent</button>
+      <button class="tbtn" onclick="tab('popular',this)">Popular</button>
+      <button class="tbtn" onclick="tab('unanswered',this)">Unanswered</button>
+    </div>
+    <div class="two-col">
+      <div class="main-col">
+        <div id="sec-categories" class="sec on">
+          <div class="sec-head"><h2>Browse by category</h2><button class="btn btn-navy btn-sm" onclick="openModal()">+ New topic</button></div>
+          <div class="cat-grid">
+            <div class="card cat-card" onclick="tab('recent',document.querySelectorAll('.tbtn')[1])">
+              <div class="cat-icon" style="background:var(--navy-light);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+              <h3>Export Documentation</h3><p>47 topics &middot; 203 replies</p>
+            </div>
+            <div class="card cat-card" onclick="tab('recent',document.querySelectorAll('.tbtn')[1])">
+              <div class="cat-icon" style="background:var(--green-bg);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.8" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 1 1 0 7H6"/></svg></div>
+              <h3>Trade Finance</h3><p>61 topics &middot; 318 replies</p>
+            </div>
+            <div class="card cat-card" onclick="tab('recent',document.querySelectorAll('.tbtn')[1])">
+              <div class="cat-icon" style="background:var(--amber-bg);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="1.8" stroke-linecap="round"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg></div>
+              <h3>Logistics &amp; Shipping</h3><p>34 topics &middot; 145 replies</p>
+            </div>
+            <div class="card cat-card" onclick="tab('recent',document.querySelectorAll('.tbtn')[1])">
+              <div class="cat-icon" style="background:#FEE2E2;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#991B1B" stroke-width="1.8" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+              <h3>Customs &amp; Compliance</h3><p>28 topics &middot; 97 replies</p>
+            </div>
+            <div class="card cat-card" onclick="tab('recent',document.querySelectorAll('.tbtn')[1])">
+              <div class="cat-icon" style="background:#EDE9FE;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5B21B6" stroke-width="1.8" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div>
+              <h3>Market Entry Strategy</h3><p>55 topics &middot; 270 replies</p>
+            </div>
+            <div class="card cat-card" onclick="tab('recent',document.querySelectorAll('.tbtn')[1])">
+              <div class="cat-icon" style="background:var(--green-bg);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.8" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
+              <h3>Student Q&amp;A</h3><p>89 topics &middot; 412 replies</p>
+            </div>
+            <div class="card cat-card" onclick="tab('recent',document.querySelectorAll('.tbtn')[1])">
+              <div class="cat-icon" style="background:var(--gold-l);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.8" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+              <h3>Alumni Corner</h3><p>31 topics &middot; 188 replies</p>
+            </div>
+            <div class="card cat-card" onclick="tab('recent',document.querySelectorAll('.tbtn')[1])">
+              <div class="cat-icon" style="background:var(--navy-light);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+              <h3>Webinars &amp; Events</h3><p>19 topics &middot; 74 replies</p>
+            </div>
+          </div>
+        </div>
+        <div id="sec-recent" class="sec">
+          <div class="sec-head"><h2>Recent discussions</h2><button class="btn btn-navy btn-sm" onclick="openModal()">+ New topic</button></div>
+          <div class="topic-list">
+            <div class="card topic-card" onclick="gp('thread',null)">
+              <div class="tc-top"><div class="av" style="background:var(--navy-light);color:var(--navy);">AO</div><div class="tc-body"><div class="tc-title">What is the best approach for Letter of Credit discrepancies in West Africa?</div><div class="tc-meta">Adaeze Okonkwo &middot; Trade Finance &middot; 3 hours ago</div></div></div>
+              <div class="tc-foot"><span class="badge b-navy">Trade Finance</span><span class="badge b-green"><svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6L9 17l-5-5"/></svg>Answered</span><div class="reply-ct"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>12 replies</div></div>
+            </div>
+            <div class="card topic-card" onclick="gp('thread',null)">
+              <div class="tc-top"><div class="av" style="background:var(--green-bg);color:var(--green);">GA</div><div class="tc-body"><div class="tc-title">How to classify goods under HS Code for agro-products — a practical guide</div><div class="tc-meta">Grace Adedayo &middot; Export Documentation &middot; 1 day ago</div></div></div>
+              <div class="tc-foot"><span class="badge b-navy">Documentation</span><span class="badge b-gold">Resource</span><div class="reply-ct"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>8 replies</div></div>
+            </div>
+            <div class="card topic-card" onclick="gp('thread',null)">
+              <div class="tc-top"><div class="av" style="background:var(--amber-bg);color:var(--amber);">SR</div><div class="tc-body"><div class="tc-title">Anyone completed the CDEI module 3? Looking for study partners</div><div class="tc-meta">Sophia Reid &middot; Student Q&amp;A &middot; 2 days ago</div></div></div>
+              <div class="tc-foot"><span class="badge b-navy">Student Q&amp;A</span><div class="reply-ct"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>5 replies</div></div>
+            </div>
+            <div class="card topic-card" onclick="gp('thread',null)">
+              <div class="tc-top"><div class="av" style="background:#EDE9FE;color:#5B21B6;">TK</div><div class="tc-body"><div class="tc-title">Incoterms 2020 — the practical differences every exporter needs to know</div><div class="tc-meta">Tunde Kuforiji &middot; Logistics &middot; 3 days ago</div></div></div>
+              <div class="tc-foot"><span class="badge b-navy">Logistics</span><span class="badge b-green">Expert reply</span><div class="reply-ct"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>21 replies</div></div>
+            </div>
+            <div class="card topic-card" onclick="gp('thread',null)">
+              <div class="tc-top"><div class="av" style="background:#FEE2E2;color:#991B1B;">KA</div><div class="tc-body"><div class="tc-title">Documents required for exporting fashion items from Nigeria to the EU?</div><div class="tc-meta">Kolade Adeola &middot; Export Documentation &middot; 4 hours ago</div></div></div>
+              <div class="tc-foot"><span class="badge b-navy">Documentation</span><span class="badge b-red">Needs answer</span><div class="reply-ct"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>0 replies</div></div>
+            </div>
+          </div>
+        </div>
+        <div id="sec-popular" class="sec">
+          <div class="sec-head"><h2>Popular this month</h2><button class="btn btn-navy btn-sm" onclick="openModal()">+ New topic</button></div>
+          <div class="topic-list">
+            <div class="card topic-card" onclick="gp('thread',null)"><div class="tc-top"><div class="av" style="background:var(--green-bg);color:var(--green);">VO</div><div class="tc-body"><div class="tc-title">Incoterms 2020 — the practical differences every exporter needs to know</div><div class="tc-meta">Victoria Orji &middot; Logistics &middot; 2 weeks ago</div></div></div><div class="tc-foot"><span class="badge b-navy">Logistics</span><span class="badge b-green">Expert reply</span><div class="reply-ct"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>47 replies</div></div></div>
+            <div class="card topic-card" onclick="gp('thread',null)"><div class="tc-top"><div class="av" style="background:var(--navy-light);color:var(--navy);">CA</div><div class="tc-body"><div class="tc-title">Understanding SWIFT MT700 — a step-by-step breakdown for beginners</div><div class="tc-meta">Caleb Afuwape (Mentor) &middot; Trade Finance &middot; 1 week ago</div></div></div><div class="tc-foot"><span class="badge b-navy">Trade Finance</span><span class="badge b-gold">Pinned</span><div class="reply-ct"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>33 replies</div></div></div>
+          </div>
+        </div>
+        <div id="sec-unanswered" class="sec">
+          <div class="sec-head"><h2>Unanswered — help a fellow member</h2><button class="btn btn-navy btn-sm" onclick="openModal()">+ New topic</button></div>
+          <div class="topic-list">
+            <div class="card topic-card" onclick="gp('thread',null)"><div class="tc-top"><div class="av" style="background:#FEE2E2;color:#991B1B;">KA</div><div class="tc-body"><div class="tc-title">Documents required for exporting fashion items from Nigeria to the EU?</div><div class="tc-meta">Kolade Adeola &middot; 4 hours ago</div></div></div><div class="tc-foot"><span class="badge b-red">Needs answer</span><div class="reply-ct">0 replies</div></div></div>
+            <div class="card topic-card" onclick="gp('thread',null)"><div class="tc-top"><div class="av" style="background:#EDE9FE;color:#5B21B6;">PO</div><div class="tc-body"><div class="tc-title">Is a Certificate of Origin mandatory for exports to South Africa under AfCFTA?</div><div class="tc-meta">Priscilla Owusu &middot; 8 hours ago</div></div></div><div class="tc-foot"><span class="badge b-red">Needs answer</span><div class="reply-ct">0 replies</div></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="side-col">
+        <div class="side-card"><h3>Active now</h3><div class="srow"><span class="dot-on"></span>Adaeze Okonkwo</div><div class="srow"><span class="dot-on"></span>Grace Adedayo</div><div class="srow"><span class="dot-on"></span>Sophia Reid</div><div class="srow"><span class="dot-busy"></span>Mentor: C. Afuwape</div><div class="srow"><span class="dot-on"></span>Kolade Adeola</div></div>
+        <div class="side-card"><h3>Upcoming events</h3><div class="srow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>UK Customs post-Brexit &mdash; Apr 3</div><div class="srow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Mentor matching &mdash; Apr 10</div><div class="srow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Trade Finance Workshop &mdash; Apr 17</div></div>
+        <div class="side-card"><h3>Trending tags</h3><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:2px;"><span class="badge b-navy">#LetterOfCredit</span><span class="badge b-green">#HSCode</span><span class="badge b-gold">#Incoterms</span><span class="badge b-navy">#NigeriaExport</span><span class="badge b-green">#CDEI</span><span class="badge b-gold">#AfCFTA</span></div></div>
+        <div class="side-card"><h3>Quick links</h3><div class="srow" style="cursor:pointer;" onclick="gp('mentorship',document.querySelectorAll('.tnav')[1])"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Find a mentor</div><div class="srow" style="cursor:pointer;" onclick="gp('resources',document.querySelectorAll('.tnav')[3])"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Resource library</div><div class="srow" style="cursor:pointer;" onclick="gp('programs',document.querySelectorAll('.tnav')[2])"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg>Programmes</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- THREAD PAGE -->
+<div id="page-thread" class="page">
+  <div class="wrap">
+    <div class="breadcrumb"><a onclick="gp('forum',document.querySelector('.tnav'))">Forum</a><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg><a onclick="tab('recent',document.querySelectorAll('.tbtn')[1]);gp('forum',document.querySelector('.tnav'))">Trade Finance</a><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg><span>Letter of Credit discrepancies</span></div>
+    <div class="two-col">
+      <div class="main-col">
+        <div class="thread-hd">
+          <div style="display:flex;gap:8px;margin-bottom:12px;"><span class="badge b-navy">Trade Finance</span><span class="badge b-green"><svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor"><path d="M20 6L9 17l-5-5"/></svg>Answered</span></div>
+          <h1>What is the best approach for Letter of Credit discrepancies in West Africa?</h1>
+          <div class="thread-meta"><div class="av" style="width:28px;height:28px;font-size:11px;background:var(--navy-light);color:var(--navy);">AO</div><strong>Adaeze Okonkwo</strong> &middot; Student &middot; Posted 3 hours ago &middot; 12 replies</div>
+        </div>
+        <div class="reply-card">
+          <div class="reply-top"><div class="av" style="width:40px;height:40px;background:var(--navy-light);color:var(--navy);">AO</div><div class="reply-auth"><h4>Adaeze Okonkwo</h4><p>Student &middot; 3 hours ago &middot; Original post</p></div></div>
+          <div class="reply-body">I recently encountered a situation where our LC documents were rejected by the confirming bank due to a discrepancy in the description of goods. The shipper's invoice says "fresh cassava starch" but the LC specifies "cassava starch, food grade." The goods are the same — we have the certification to prove it. What is the standard practice in West Africa for resolving this kind of documentary discrepancy, and how quickly can it typically be resolved before the shipment deadline?</div>
+          <div class="reply-actions"><button class="act-btn" onclick="showToast('Marked as helpful')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>Helpful (4)</button><button class="act-btn" onclick="showToast('Reply form below')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg>Reply</button></div>
+        </div>
+        <div class="reply-card" style="border-left:3px solid var(--gold-b);">
+          <div class="reply-top"><div class="av" style="width:40px;height:40px;background:var(--navy-light);color:var(--navy);">CA</div><div class="reply-auth"><h4>Caleb Afuwape</h4><p>Verified Mentor &middot; Head of Trade Finance &middot; 1 hour ago</p></div><span class="badge b-gold" style="margin-left:auto;">Best answer</span></div>
+          <div class="reply-body">Great question, Adaeze. This is a classic UCP 600 Article 14 scenario. The key issue is that under Article 14(d), the description of goods in a commercial invoice must correspond with the LC, but in other documents it need not mirror the LC exactly — it just must not conflict. Your approach here should be:<br><br>1. Request an amendment from the issuing bank to align the description — this is standard and most cooperative banks will process it within 24–48 hours if your buyer agrees.<br><br>2. Alternatively, the presenting bank can note the discrepancy and present under reserve, meaning payment proceeds but the buyer retains the right to reject. This is riskier.<br><br>In West Africa specifically, calling the trade desk directly (not email) tends to speed things up considerably. Who is your confirming bank?</div>
+          <div class="reply-actions"><button class="act-btn" onclick="showToast('Marked as helpful')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>Helpful (18)</button><button class="act-btn" onclick="showToast('Reply form below')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></svg>Reply</button></div>
+        </div>
+        <div class="reply-form"><h3>Add your reply</h3><textarea placeholder="Share your knowledge or ask a follow-up..."></textarea><div style="display:flex;justify-content:flex-end;margin-top:10px;"><button class="btn btn-navy" onclick="showToast('Your reply has been posted!')">Post reply</button></div></div>
+      </div>
+      <div class="side-col">
+        <div class="side-card"><h3>About this topic</h3><div class="srow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>12 replies</div><div class="srow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>134 views</div><div class="srow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>3 hours ago</div></div>
+        <div class="side-card"><h3>Related topics</h3><div class="srow" style="cursor:pointer;font-size:12.5px;" onclick="showToast('Loading topic...')">UCP 600 Article 14 — a plain English summary</div><div class="srow" style="cursor:pointer;font-size:12.5px;" onclick="showToast('Loading topic...')">How to request an LC amendment correctly</div><div class="srow" style="cursor:pointer;font-size:12.5px;" onclick="showToast('Loading topic...')">Presenting under reserve — risks and benefits</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MENTORSHIP PAGE -->
+<div id="page-mentorship" class="page">
+  <div class="wrap">
+    <div class="mentor-banner">
+      <div class="mb-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="1.6" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+      <div class="mb-text">
+        <h2>Trade Mentorship Programme</h2>
+        <p>Connect directly with experienced trade professionals, T.I.E.I.T fellows, and senior alumni committed to supporting the next generation of international trade practitioners. Sessions are structured, goal-focused, and tracked through your dashboard.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;"><button class="btn btn-navy" onclick="showToast('Mentee application — available in final build')">Apply as mentee</button><button class="btn btn-outline" onclick="showToast('Mentor registration — available in final build')">Become a mentor</button></div>
+      </div>
+    </div>
+    <div class="filter-bar"><input class="f-input" placeholder="Search by name, specialism, or location..."><select class="f-select"><option>All specialisms</option><option>Trade Finance</option><option>Logistics</option><option>Compliance</option><option>Market Entry</option><option>Documentation</option></select></div>
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:24px;align-items:start;">
+      <div>
+        <div class="mcard"><div class="mcard-top"><div class="mav" style="background:var(--navy-light);color:var(--navy);">CA</div><div class="mcard-info"><h3>Caleb Afuwape</h3><p>Head of Trade Finance &middot; 18 years &middot; London, UK</p></div><span class="badge b-green" style="margin-left:auto;flex-shrink:0;">Available</span></div><div class="mcard-tags"><span class="mtag">Trade Finance</span><span class="mtag">Letters of Credit</span><span class="mtag">SWIFT</span><span class="mtag">UK Export</span></div><div class="mcard-footer"><div class="mcard-stat"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>6 mentees</div><div class="mcard-stat" style="margin-left:12px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>4.9/5</div><button class="btn btn-navy btn-sm" style="margin-left:auto;" onclick="showToast('Request sent to Caleb Afuwape!')">Request mentorship</button></div></div>
+        <div class="mcard"><div class="mcard-top"><div class="mav" style="background:var(--green-bg);color:var(--green);">AO</div><div class="mcard-info"><h3>Amira Osei</h3><p>Export Compliance Lead &middot; 12 years &middot; Accra, Ghana</p></div><span class="badge b-green" style="margin-left:auto;flex-shrink:0;">Available</span></div><div class="mcard-tags"><span class="mtag">Customs</span><span class="mtag">Compliance</span><span class="mtag">AfCFTA</span><span class="mtag">Africa Trade</span></div><div class="mcard-footer"><div class="mcard-stat"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>4 mentees</div><div class="mcard-stat" style="margin-left:12px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>4.8/5</div><button class="btn btn-navy btn-sm" style="margin-left:auto;" onclick="showToast('Request sent to Amira Osei!')">Request mentorship</button></div></div>
+        <div class="mcard"><div class="mcard-top"><div class="mav" style="background:#EDE9FE;color:#5B21B6;">RC</div><div class="mcard-info"><h3>Richard Chukwu</h3><p>Freight &amp; Logistics Director &middot; 22 years &middot; Lagos, Nigeria</p></div><span class="badge b-amber" style="margin-left:auto;flex-shrink:0;">Busy</span></div><div class="mcard-tags"><span class="mtag">Freight</span><span class="mtag">Incoterms</span><span class="mtag">Multimodal</span><span class="mtag">Port Operations</span></div><div class="mcard-footer"><div class="mcard-stat"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>7 mentees</div><div class="mcard-stat" style="margin-left:12px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>5.0/5</div><button class="btn btn-ghost btn-sm" style="margin-left:auto;" onclick="showToast('Added to Richard Chukwu\'s waitlist!')">Join waitlist</button></div></div>
+        <div class="mcard"><div class="mcard-top"><div class="mav" style="background:var(--amber-bg);color:var(--amber);">FT</div><div class="mcard-info"><h3>Fatima Tanko</h3><p>International Trade Consultant &middot; 9 years &middot; Abuja, Nigeria</p></div><span class="badge b-green" style="margin-left:auto;flex-shrink:0;">Available</span></div><div class="mcard-tags"><span class="mtag">Market Entry</span><span class="mtag">ECOWAS</span><span class="mtag">SME Exports</span><span class="mtag">Strategy</span></div><div class="mcard-footer"><div class="mcard-stat"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>3 mentees</div><div class="mcard-stat" style="margin-left:12px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>4.7/5</div><button class="btn btn-navy btn-sm" style="margin-left:auto;" onclick="showToast('Request sent to Fatima Tanko!')">Request mentorship</button></div></div>
+      </div>
+      <div style="position:sticky;top:90px;">
+        <div class="side-card"><h3>Programme stats</h3><div class="srow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>42 active mentors</div><div class="srow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>118 active mentees</div><div class="srow"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>87% satisfaction</div></div>
+        <div class="side-card"><h3>How it works</h3><div class="srow">1. Apply as a mentee</div><div class="srow">2. Browse profiles</div><div class="srow">3. Send a request</div><div class="srow">4. Meet monthly</div><div class="srow">5. Track progress</div></div>
+        <div class="side-card"><h3>Downloads</h3><div class="srow" style="cursor:pointer;" onclick="showToast('Available in final build')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Mentee handbook</div><div class="srow" style="cursor:pointer;" onclick="showToast('Available in final build')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Goal-setting template</div><div class="srow" style="cursor:pointer;" onclick="showToast('Available in final build')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Meeting log sheet</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- PROGRAMMES PAGE -->
+<div id="page-programs" class="page">
+  <div class="wrap">
+    <div style="margin-bottom:24px;"><div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-faint);margin-bottom:8px;">T.I.E.I.T Learning</div><h1 style="font-family:'DM Serif Display',serif;font-size:28px;font-weight:400;color:var(--navy);margin-bottom:8px;">Programmes &amp; Courses</h1><p style="color:var(--text-muted);font-size:14px;max-width:560px;">Every T.I.E.I.T programme has a dedicated forum space where students can collaborate, share notes, and get support from tutors and peers.</p></div>
+    <div class="prog-card"><div class="prog-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="1.7" stroke-linecap="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div><div class="prog-body"><h3>CDEI — Certificate in Digital &amp; Export Innovation</h3><p>A structured cohort learning track with forum support. Share notes, ask tutor questions, and collaborate with students across all modules in a dedicated discussion space.</p><div class="prog-meta"><span class="badge b-green">Ongoing</span><span>48 enrolled</span><span>&middot; Next session: Apr 5</span></div></div></div>
+    <div class="prog-card"><div class="prog-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="1.7" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><div class="prog-body"><h3>Export Ready Bootcamp 2025</h3><p>A 6-week intensive for early-stage exporters with weekly live sessions and a dedicated forum thread for each module's discussions, homework, and resources.</p><div class="prog-meta"><span class="badge b-amber">Starts Apr 14</span><span>Registrations open</span></div></div></div>
+    <div class="prog-card"><div class="prog-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="1.7" stroke-linecap="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><div class="prog-body"><h3>Alumni Knowledge Library</h3><p>A curated collection of resources, case studies, templates, and articles shared by T.I.E.I.T alumni. Open access for all registered members of the forum.</p><div class="prog-meta"><span class="badge b-navy">Always open</span><span>214 resources</span></div></div></div>
+    <div class="prog-card"><div class="prog-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="prog-body"><h3>Monthly Trade Webinar Series</h3><p>Expert-led webinars on current trade topics, followed by live Q&amp;A and a dedicated forum thread for post-session discussion and recording access.</p><div class="prog-meta"><span class="badge b-navy">Monthly</span><span>Next: UK Customs post-Brexit &mdash; Apr 3</span></div></div></div>
+    <div class="prog-card"><div class="prog-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="1.7" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><div class="prog-body"><h3>Diploma in International Trade (DIT)</h3><p>The flagship T.I.E.I.T qualification. The forum includes module-specific discussion boards, assignment Q&amp;A, and a peer study group feature for DIT students.</p><div class="prog-meta"><span class="badge b-green">Ongoing</span><span>112 enrolled</span></div></div></div>
+  </div>
+</div>
+
+<!-- RESOURCES PAGE -->
+<div id="page-resources" class="page">
+  <div class="wrap">
+    <div style="margin-bottom:24px;"><div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-faint);margin-bottom:8px;">Knowledge Base</div><h1 style="font-family:'DM Serif Display',serif;font-size:28px;font-weight:400;color:var(--navy);margin-bottom:8px;">Resource Library</h1><p style="color:var(--text-muted);font-size:14px;max-width:560px;">Templates, guides, case studies, and reference documents — uploaded by mentors, tutors, and alumni.</p></div>
+    <div style="display:grid;grid-template-columns:minmax(0,1fr) 240px;gap:24px;">
+      <div>
+        <div style="font-size:12px;font-weight:500;color:var(--text-muted);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.06em;">Trade Finance</div>
+        <div class="res-card" onclick="showToast('Download — available in final build')"><div class="res-icon" style="background:var(--navy-light);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="1.8" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div><div><div class="res-title">UCP 600 — Plain English Summary</div><div class="res-meta">PDF &middot; C. Afuwape (Mentor) &middot; 847 downloads</div></div><div class="res-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div></div>
+        <div class="res-card" onclick="showToast('Download — available in final build')"><div class="res-icon" style="background:var(--green-bg);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.8" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div><div class="res-title">LC Discrepancy Checklist — Excel Template</div><div class="res-meta">XLSX &middot; A. Osei &middot; 523 downloads</div></div><div class="res-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div></div>
+        <div style="font-size:12px;font-weight:500;color:var(--text-muted);margin:18px 0 10px;text-transform:uppercase;letter-spacing:0.06em;">Documentation &amp; Compliance</div>
+        <div class="res-card" onclick="showToast('Download — available in final build')"><div class="res-icon" style="background:var(--amber-bg);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="1.8" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div><div class="res-title">HS Code Classification Guide 2024</div><div class="res-meta">PDF &middot; T.I.E.I.T Tutor &middot; 1,204 downloads</div></div><div class="res-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div></div>
+        <div class="res-card" onclick="showToast('Download — available in final build')"><div class="res-icon" style="background:#FEE2E2;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#991B1B" stroke-width="1.8" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><div><div class="res-title">AfCFTA Rules of Origin — Country Summary</div><div class="res-meta">PDF &middot; F. Tanko &middot; 389 downloads</div></div><div class="res-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div></div>
+      </div>
+      <div style="position:sticky;top:90px;"><div class="side-card"><h3>Library stats</h3><div class="srow">214 total resources</div><div class="srow">38 contributors</div><div class="srow">14,800 downloads</div></div><div class="side-card"><h3>Upload a resource</h3><p style="font-size:13px;color:var(--text-muted);margin-bottom:12px;line-height:1.6;">Share a document, template, or guide with the community.</p><button class="btn btn-navy btn-sm btn-full" onclick="showToast('Upload form — available in final build')">Upload resource</button></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE PAGE -->
+<div id="page-profile" class="page">
+  <div class="profile-hero">
+    <div class="prof-hero-inner">
+      <div class="prof-av-lg" style="background:var(--gold-l);color:var(--gold);">SO</div>
+      <div><div class="prof-name">Ayobami Sodiq</div><div class="prof-role">Student &middot; CDEI Cohort 4 &middot; Member since Jan 2024</div></div>
+      <button class="btn btn-white btn-sm" style="margin-left:auto;" onclick="showToast('Edit profile — available in final build')">Edit profile</button>
+    </div>
+  </div>
+  <div class="prof-body">
+    <div class="prof-grid">
+      <div class="prof-section"><h3>Activity summary</h3><div class="prof-stat"><span class="prof-stat-n">14</span><span class="prof-stat-l">Topics posted</span></div><div class="prof-stat"><span class="prof-stat-n">47</span><span class="prof-stat-l">Replies made</span></div><div class="prof-stat"><span class="prof-stat-n">92</span><span class="prof-stat-l">Helpful votes</span></div></div>
+      <div class="prof-section"><h3>Mentorship</h3><div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;"><div class="av" style="width:40px;height:40px;background:var(--navy-light);color:var(--navy);">CA</div><div><div style="font-size:14px;font-weight:500;">Caleb Afuwape</div><div style="font-size:12px;color:var(--text-faint);">Mentor &middot; Since Feb 2024</div></div></div><button class="btn btn-outline btn-sm btn-full" onclick="showToast('Messaging — available in final build')">Message mentor</button></div>
+      <div class="prof-section" style="grid-column:1/-1;"><h3>Recent activity</h3><div class="act-row"><div class="act-dot"></div><div>Replied to <strong>Incoterms 2020 — the practical differences every exporter needs to know</strong> &middot; 2 days ago</div></div><div class="act-row"><div class="act-dot"></div><div>Posted <strong>Anyone completed the CDEI module 3? Looking for study partners</strong> &middot; 2 days ago</div></div><div class="act-row"><div class="act-dot"></div><div>Downloaded <strong>UCP 600 Plain English Summary</strong> from the resource library &middot; 4 days ago</div></div><div class="act-row"><div class="act-dot"></div><div>Received a helpful vote on reply in <strong>HS Code Classification for agricultural goods</strong> &middot; 5 days ago</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT PAGE -->
+<div id="page-about" class="page">
+  <div class="about-banner">
+    <div class="about-lines"><svg viewBox="0 0 1200 400" preserveAspectRatio="xMidYMid slice"><defs><pattern id="g2" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse"><path d="M60 0L0 0 0 60" fill="none" stroke="#fff" stroke-width="0.5"/></pattern></defs><rect width="1200" height="400" fill="url(#g2)"/></svg></div>
+    <div class="about-inner">
+      <h1>Built for T.I.E.I.T,<br><em>designed to last</em></h1>
+      <p>This prototype was built specifically for The Institute of Export &amp; International Trade to demonstrate what your Student Forum and Mentorship Programme could look like — before a single line of production code is written.</p>
+      <p>Every page, interaction, and feature you've seen has been carefully considered to match your brief. What you're reviewing here is the design intent — the real build lives on your existing WordPress site, built on proven technology that your team can manage.</p>
+    </div>
+  </div>
+  <div class="about-grid">
+    <div class="about-card"><div class="about-card-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="1.7" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div><h3>Built on your existing WordPress site</h3><p>Everything here will be implemented directly on the T.I.E.I.T WordPress site — no new platform, no migration, no extra hosting. Your Elementor setup and existing content stay exactly as they are.</p></div>
+    <div class="about-card"><div class="about-card-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="1.7" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h3>Proven, maintained technology</h3><p>The forum runs on bbPress and BuddyPress — trusted by over 300,000 websites worldwide, actively maintained, and fully compatible with WordPress. No fragile custom code for the core features.</p></div>
+    <div class="about-card"><div class="about-card-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="1.7" stroke-linecap="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><h3>Mentorship built in from day one</h3><p>Member profiles, mentor directories, connection requests, and resource sharing are core to the architecture — not added on later. The system is ready to run your mentorship programme from launch.</p></div>
+    <div class="about-card"><div class="about-card-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="1.7" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></div><h3>Designed to grow with you</h3><p>The structure supports adding new features over time — private messaging, event registrations, member badges, newsletter integration, and more — without needing to rebuild anything from scratch.</p></div>
+    <div class="about-card"><div class="about-card-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="1.7" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div><h3>Fully responsive on every device</h3><p>Students can participate from a desktop at work, a tablet at home, or a phone on the go. Mobile usability is a first-class priority in both the design and the final build — not an afterthought.</p></div>
+    <div class="about-card"><div class="about-card-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="1.7" stroke-linecap="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 1 1 0 7H6"/></svg></div><h3>Transparent, partnership pricing</h3><p>T.I.E.I.T refers students to us and has worked with us long-term. Our pricing reflects that trust — quality work at honest rates, with the care and attention the institute's members genuinely deserve.</p></div>
+  </div>
+  <div class="about-contact"><div class="about-contact-text"><h3>Ready to proceed, or have feedback on what you've seen?</h3><p>Please reply to the proposal email — we'll incorporate all your notes before development begins.</p></div><button class="btn btn-navy" onclick="showToast('Please reply to the proposal email to get started')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Get in touch</button></div>
+</div>
+
+<!-- MODAL -->
+<div class="overlay" id="modal" onclick="hov(event)">
+  <div class="modal">
+    <div class="modal-hd"><h2>Start a new discussion</h2><button class="close-x" onclick="closeModal()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="field"><label>Topic title</label><input type="text" placeholder="What is your question or topic?" id="tt"></div>
+    <div class="field"><label>Category</label><select><option>Student Q&amp;A</option><option>Trade Finance</option><option>Export Documentation</option><option>Logistics &amp; Shipping</option><option>Customs &amp; Compliance</option><option>Market Entry Strategy</option></select></div>
+    <div class="field"><label>Your message</label><textarea placeholder="Describe your question or open a discussion..."></textarea></div>
+    <div class="modal-ft"><button class="btn btn-ghost btn-sm" onclick="closeModal()">Cancel</button><button class="btn btn-navy btn-sm" onclick="submitTopic()">Post topic</button></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+function gp(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.getElementById('page-'+id).classList.add('on');
+  if(btn){document.querySelectorAll('.tnav').forEach(b=>b.classList.remove('on'));btn.classList.add('on');}
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function tab(id,btn){
+  document.querySelectorAll('#page-forum .sec').forEach(s=>s.classList.remove('on'));
+  document.getElementById('sec-'+id).classList.add('on');
+  document.querySelectorAll('.tbtn').forEach(b=>b.classList.remove('on'));
+  if(btn&&btn.classList)btn.classList.add('on');
+}
+function openModal(){document.getElementById('modal').classList.add('on');}
+function closeModal(){document.getElementById('modal').classList.remove('on');}
+function hov(e){if(e.target===document.getElementById('modal'))closeModal();}
+function submitTopic(){
+  const t=document.getElementById('tt').value.trim();
+  closeModal();
+  showToast(t?'"'+t.slice(0,45)+(t.length>45?'…':'')+'" posted!':'Your topic has been posted!');
+  document.getElementById('tt').value='';
+}
+let _t;
+function showToast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.classList.add('on');
+  clearTimeout(_t);_t=setTimeout(()=>el.classList.remove('on'),3200);
+}
+</script>
+</body>
+</html>
